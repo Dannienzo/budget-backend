@@ -126,7 +126,7 @@ DATABASES = {
 CORS_ALLOWED_ORIGINS=[
     'http://localhost:5173',
     'http://localhost:5173',
-    'https://budget-project-6l48.vercel.app/',
+    'https://budget-project-6l48.vercel.app',
 
 ]
 
