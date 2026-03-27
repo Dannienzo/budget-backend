@@ -4,7 +4,6 @@ import cloudinary
 import os
 import sys
 load_dotenv()
-print("DEBUG FROM FILE:", True)
 
 """
 Django settings for tracker_backend project.
@@ -32,15 +31,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ux7$+50ss%-mpz*(g9t2e=5@8#omz!lts7o*+$er4eg0x5yrn#'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-ux7$+50ss%-mpz*(g9t2e=5@8#omz!lts7o*+$er4eg0x5yrn#')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-# DEBUG = os.getenv('DEBUG', 'True') == 'True'
-
-DEBUG = True
-
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
 # Application definition
 
