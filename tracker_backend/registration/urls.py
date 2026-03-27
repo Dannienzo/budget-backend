@@ -14,6 +14,8 @@ router.register(r'applicant', views.ApplicantViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('register/', views.RegisterView.as_view(), name='register'),
+    path('verify-otp/', views.VerifyOTPView.as_view(), name='verify_otp'),
+    path('resend-otp/', views.ResendOTPView.as_view(), name='resend_otp'),
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
