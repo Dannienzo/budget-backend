@@ -4,6 +4,7 @@ import cloudinary
 import os
 import sys
 load_dotenv()
+print("DEBUG FROM FILE:", True)
 
 """
 Django settings for tracker_backend project.
@@ -34,10 +35,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ux7$+50ss%-mpz*(g9t2e=5@8#omz!lts7o*+$er4eg0x5yrn#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
+# DEBUG = os.getenv('DEBUG', 'True') == 'True'
+
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
-
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -111,16 +114,14 @@ WSGI_APPLICATION = 'tracker_backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 import os
+import dj_database_url
+
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', default='tracker_db'),
-        'USER': os.getenv('DB_USER', default='tracker_user'),
-        'PASSWORD': os.getenv('DB_PASSWORD', default='Ramsey123'),
-        'HOST': os.getenv('DB_HOST', default='localhost'),
-        'PORT': os.getenv('DB_PORT', default='5432'),
-    }
+    'default': dj_database_url.config(  # ✅ correct
+        default=os.getenv('DATABASE_URL', 'postgresql://tracker_user:Ramsey123@localhost:5432/tracker_db'),
+        conn_max_age=600
+    )
 }
 
 CORS_ALLOWED_ORIGINS=[
