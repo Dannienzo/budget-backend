@@ -24,53 +24,15 @@ class RegisterView(APIView):
         if serializer.is_valid():
 
             user = serializer.save()
-            user.is_active = False
-            user.save()
+            
+            # Generate JWT tokens so user is logged in immediately
+            refresh = RefreshToken.for_user(user)
 
-            # generating Otp
-            code = OTPVerification.generate_otp()
-            from django.contrib.auth.models import User
-            expires_at = timezone.now() + timedelta(minutes=10)
-
-            # Save OTP — delete old one if exists
-            OTPVerification.objects.filter(user=user).delete()
-            OTPVerification.objects.create(
-                user=user,
-                code=code,
-                expires_at=expires_at
-            )
-
-            # Send OTP email
-            try:
-                send_mail(
-                    subject='Verify your Smart Budget account',
-                    message=f'''
-    Hi {user.username}!
-
-    Welcome to Smart Bugeting & Expense Project or lasop work sha 
-
-    your Verification code is : {code}
-
-    Note the code will Expire soon 
-
-    if no be you won create account Abeg Ignore the Mail.
-                    ''',
-                    from_email=None,  # uses DEFAULT_FROM_EMAIL from settings
-                    recipient_list=[user.email],
-                    fail_silently=False,
-                )
-
-            except Exception as e:
-                # If email fails, delete user and return error
-                user.delete()
-                return Response(
-                    {'error': 'Failed to send verification email. Please try again.'},
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                )
-
-            return Response(
-                {'message': 'User registered successfully.  Please check your email for the verification code.'},
-                 status=status.HTTP_201_CREATED)
+            return Response({
+                'message': 'Account created successfully!',
+                'access': str(refresh.access_token),
+                'refresh': str(refresh),
+            }, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
